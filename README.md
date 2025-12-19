@@ -1,11 +1,26 @@
-# �� Alienos Docker
 
-[![Docker](https://img.shields.io/badge/Docker-22.04-blue)](https://www.docker.com/)  
-[![Rust](https://img.shields.io/badge/Rust-nightly-orange)](https://www.rust-lang.org/)  
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+# 🚀 AlienOS Docker
+
+[![Docker](https://img.shields.io/badge/Docker-22.04-blue?logo=docker)](https://www.docker.com/)  
+[![Rust](https://img.shields.io/badge/Rust-nightly-orange?logo=rust)](https://www.rust-lang.org/)  
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)  
 
 > Docker setup for **Alien / ArceOS** development environment  
-> 快速搭建一致的 Alienos 开发环境，支持 RISC-V 仿真、Rust 和 musl 工具链。
+> 快速搭建一致的 AlienOS 开发环境，支持 RISC-V 仿真、Rust 和 musl 工具链。
+
+---
+
+## ⚡ 快速开始
+
+| 步骤 | 命令 | 说明 |
+|------|------|------|
+| **1️⃣ 构建镜像** | `docker build -t alien-alien-dev .` | 构建本地 Docker 镜像 |
+| **或使用 Docker Compose 构建** | `docker-compose build` | 支持更多配置，推荐使用 |
+| **2️⃣ 启动容器** | `docker run -it --rm -v $(pwd)/workspace:/workspace -p 5555:5555 alien-alien-dev` | 挂载工作目录并启动容器 |
+| **或 Docker Compose** | `docker-compose up` | 启动容器并显示日志 |
+| **3️⃣ 验证工具链** | `rustc --version`<br>`cargo --version`<br>`qemu-system-riscv64 --version` | 确认 Rust 和 QEMU 安装正确 |
+
+> 💡 提示：推荐将 AlienOS 项目代码挂载到 `/workspace`，方便编译和调试。
 
 ---
 
@@ -23,7 +38,7 @@
 
 ## 📝 项目简介
 
-该仓库提供 Alienos / ArceOS 的 **Docker 开发环境**，包含：
+本仓库提供 AlienOS / ArceOS 的 **Docker 开发环境**，包含：
 
 - Ubuntu 22.04 基础环境  
 - RISC-V QEMU 仿真环境  
@@ -38,52 +53,40 @@
 
 ## 📂 文件结构
 
-\`\`\`text
+```text
 docker/
 ├── Dockerfile               # Docker 镜像构建文件
 ├── docker-compose.yml       # 基本 Docker Compose 配置
 ├── docker-compose.gui.yml   # GUI 可选配置
 ├── Makefile.docker          # Docker 相关 Make 指令
 └── DOCKER_SETUP.md          # Docker 使用说明
-\`\`\`
+````
 
 ---
 
 ## ⚙️ 构建与运行
 
-### 构建 Docker 镜像
-
-\`\`\`bash
+```bash
+# 构建镜像
 docker build -t alien-alien-dev .
-\`\`\`
 
-或使用 Docker Compose 构建：
-
-\`\`\`bash
+# 或使用 Docker Compose
 docker-compose build
-\`\`\`
 
-### 启动容器
-
-\`\`\`bash
+# 启动容器
 docker run -it --rm -v $(pwd)/workspace:/workspace -p 5555:5555 alien-alien-dev
-\`\`\`
 
-Docker Compose 启动：
-
-\`\`\`bash
+# 或 Docker Compose 启动
 docker-compose up
-\`\`\`
+```
 
 ### 测试环境
 
-进入容器后可运行：
-
-\`\`\`bash
+```bash
 rustc --version
 cargo --version
 qemu-system-riscv64 --version
-\`\`\`
+```
 
 确保工具链安装正确。
 
@@ -93,32 +96,32 @@ qemu-system-riscv64 --version
 
 容器内默认工作目录：
 
-\`\`\`
+```text
 /workspace
-\`\`\`
+```
 
-建议将 Alienos 项目代码挂载到该目录以便进行编译和调试。
+建议将 AlienOS 项目代码挂载到该目录以便进行编译和调试。
 
 ---
 
 ## 🛠 工具链说明
 
-| 工具 | 说明 |
-|------|------|
-| **RISC-V QEMU** | 用于仿真 Alien / ArceOS 系统 |
-| **GNU RISC-V 工具链** | 编译 kernel 和链接阶段 |
-| **Rust nightly** | 与 Alien 内核兼容的 Rust 工具链 |
-| **musl RISC-V 工具链** | 编译用户程序 / libc |
-| **elfinfo** | trace_exe 工具依赖，用于调试 |
+| 工具                  | 说明                     |
+| ------------------- | ---------------------- |
+| **RISC-V QEMU**     | 用于仿真 Alien / ArceOS 系统 |
+| **GNU RISC-V 工具链**  | 编译 kernel 和链接阶段        |
+| **Rust nightly**    | 与 Alien 内核兼容的 Rust 工具链 |
+| **musl RISC-V 工具链** | 编译用户程序 / libc          |
+| **elfinfo**         | trace_exe 工具依赖，用于调试    |
 
 ---
 
 ## ⚠️ 注意事项
 
-- Docker 容器内已配置 sudo 无密码权限  
-- 网络端口 `5555` 已开放，用于调试和测试  
-- 请确保宿主机有足够磁盘空间 (~5GB)  
-- 构建镜像和编译可能需要较多时间，请耐心等待  
+* Docker 容器内已配置 `sudo` 无密码权限
+* 网络端口 `5555` 已开放，用于调试和测试
+* 请确保宿主机有足够磁盘空间 (~5GB)
+* 构建镜像和编译可能需要较多时间，请耐心等待
 
 ---
 
