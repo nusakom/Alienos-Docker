@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  alien-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: alien-os-dev
+    volumes:
+      # 挂载整个项目目录
+      - .:/workspace
+      # 挂载 cargo 缓存以加速构建
+      - cargo-cache:/root/.cargo/registry
+      - cargo-git-cache:/root/.cargo/git
+    working_dir: /workspace
+    # 启用特权模式以支持 mount 操作
+    privileged: true
+    # 保持容器运行
+    tty: true
+    stdin_open: true
+    # 端口映射 (用于网络功能测试)
+    ports:
+      - "5555:5555"
+    # 环境变量
+    environment:
+      - RUST_LOG=debug
+      - CARGO_TARGET_DIR=/workspace/target
+    # 网络模式
+    network_mode: "bridge"
+
+volumes:
+  cargo-cache:
+  cargo-git-cache:

@@ -1,0 +1,37 @@
+# Docker Compose configuration with GUI support for macOS
+# 需要先安装 XQuartz: brew install --cask xquartz
+
+version: '3.8'
+
+services:
+  alien-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: alien-os-dev-gui
+    volumes:
+      - .:/workspace
+      - cargo-cache:/root/.cargo/registry
+      - cargo-git-cache:/root/.cargo/git
+      # X11 socket for GUI support
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    working_dir: /workspace
+    privileged: true
+    tty: true
+    stdin_open: true
+    ports:
+      - "5555:5555"
+    environment:
+      - RUST_LOG=debug
+      - CARGO_TARGET_DIR=/workspace/target
+      # X11 display for GUI
+      - DISPLAY=host.docker.internal:0
+    # 网络模式
+    network_mode: "bridge"
+    # 额外的运行时选项
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  cargo-cache:
+  cargo-git-cache:
