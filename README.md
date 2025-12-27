@@ -1,130 +1,86 @@
+# 🚀 AlienOS Development Environment
 
-# 🚀 AlienOS Docker
+[![Rust](https://img.shields.io/badge/Rust-nightly-orange?logo=rust)](https://www.rust-lang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-[![Docker](https://img.shields.io/badge/Docker-22.04-blue?logo=docker)](https://www.docker.com/)  
-[![Rust](https://img.shields.io/badge/Rust-nightly-orange?logo=rust)](https://www.rust-lang.org/)  
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)  
-
-> Docker setup for **Alien / ArceOS** development environment  
-> 快速搭建一致的 AlienOS 开发环境，支持 RISC-V 仿真、Rust 和 musl 工具链。
+> **Alien / ArceOS** 本地开发环境一键配置工具。
+> 快速搭建 AlienOS 开发环境，自动配置 RISC-V 仿真器、Rust 工具链及 musl 交叉编译环境。
 
 ---
 
-## ⚡ 快速开始
+## ⚡ 快速开始 (Quick Start)
 
-| 步骤 | 命令 | 说明 |
-|------|------|------|
-| **1️⃣ 构建镜像** | `docker build -t alien-alien-dev .` | 构建本地 Docker 镜像 |
-| **或使用 Docker Compose 构建** | `docker-compose build` | 支持更多配置，推荐使用 |
-| **2️⃣ 启动容器** | `docker run -it --rm -v $(pwd)/workspace:/workspace -p 5555:5555 alien-alien-dev` | 挂载工作目录并启动容器 |
-| **或 Docker Compose** | `docker-compose up` | 启动容器并显示日志 |
-| **3️⃣ 验证工具链** | `rustc --version`<br>`cargo --version`<br>`qemu-system-riscv64 --version` | 确认 Rust 和 QEMU 安装正确 |
+本项目仅支持 **Ubuntu 22.04 LTS** 或更高版本。
 
-> 💡 提示：推荐将 AlienOS 项目代码挂载到 `/workspace`，方便编译和调试。
-
----
-
-## 📖 目录
-
-- [项目简介](#项目简介)
-- [文件结构](#文件结构)
-- [构建与运行](#构建与运行)
-- [工作目录](#工作目录)
-- [工具链说明](#工具链说明)
-- [注意事项](#注意事项)
-- [联系](#联系)
-
----
-
-## 📝 项目简介
-
-本仓库提供 AlienOS / ArceOS 的 **Docker 开发环境**，包含：
-
-- Ubuntu 22.04 基础环境  
-- RISC-V QEMU 仿真环境  
-- GNU RISC-V 工具链（编译内核和链接）  
-- Rust nightly 与 `riscv64gc-unknown-none-elf` target  
-- musl RISC-V 工具链（用于用户程序和 libc）  
-- elfinfo 工具（trace_exe 调试）  
-
-通过 Docker，开发者无需在本地手动配置复杂环境即可开始开发。
-
----
-
-## 📂 文件结构
-
-```text
-docker/
-├── Dockerfile               # Docker 镜像构建文件
-├── docker-compose.yml       # 基本 Docker Compose 配置
-├── docker-compose.gui.yml   # GUI 可选配置
-├── Makefile.docker          # Docker 相关 Make 指令
-└── DOCKER_SETUP.md          # Docker 使用说明
-````
-
----
-
-## ⚙️ 构建与运行
+### 1. 获取代码
 
 ```bash
-# 构建镜像
-docker build -t alien-alien-dev .
-
-# 或使用 Docker Compose
-docker-compose build
-
-# 启动容器
-docker run -it --rm -v $(pwd)/workspace:/workspace -p 5555:5555 alien-alien-dev
-
-# 或 Docker Compose 启动
-docker-compose up
+git clone https://github.com/nusakom/Alienos-Docker.git alien-env
+cd alien-env
 ```
 
-### 测试环境
+### 2. 一键部署
+
+运行根目录下的部署脚本：
 
 ```bash
+./setup.sh
+```
+
+**脚本功能：**
+- ✅ 自动安装系统基础依赖 (`build-essential`, `qemu-system-riscv64`, etc.)
+- ✅ 安装/更新 Rust nightly 工具链 (`nightly-2025-05-01`)
+- ✅ 添加 Rust RISC-V target (`riscv64gc-unknown-none-elf`)
+- ✅ 下载并配置 `musl` RISC-V 交叉编译工具链 (至 `/opt/riscv64-linux-musl-cross`)
+- ✅ 安装 `elfinfo` 调试工具
+
+### 3. 生效环境
+
+脚本运行完成后，请更新环境变量：
+
+```bash
+source ~/.bashrc
+```
+
+### 4. 验证安装
+
+```bash
+# 检查 Rust
 rustc --version
-cargo --version
+# 输出示例: rustc 1.xx.0-nightly ...
+
+# 检查 QEMU
 qemu-system-riscv64 --version
-```
+# 输出示例: QEMU emulator version 7.x.x ...
 
-确保工具链安装正确。
+# 检查 musl 工具链
+riscv64-linux-musl-gcc --version
+```
 
 ---
 
-## 📂 工作目录
+## 🛠 工具链清单
 
-容器内默认工作目录：
+部署脚本将自动配置以下核心组件：
 
-```text
-/workspace
-```
-
-建议将 AlienOS 项目代码挂载到该目录以便进行编译和调试。
-
----
-
-## 🛠 工具链说明
-
-| 工具                  | 说明                     |
-| ------------------- | ---------------------- |
-| **RISC-V QEMU**     | 用于仿真 Alien / ArceOS 系统 |
-| **GNU RISC-V 工具链**  | 编译 kernel 和链接阶段        |
-| **Rust nightly**    | 与 Alien 内核兼容的 Rust 工具链 |
-| **musl RISC-V 工具链** | 编译用户程序 / libc          |
-| **elfinfo**         | trace_exe 工具依赖，用于调试    |
+| 组件 | 版本/说明 | 用途 |
+|------|-----------|------|
+| **Rust Toolchain** | `nightly-2025-05-01` | AlienOS 内核编译 |
+| **QEMU** | `qemu-system-riscv64` | RISC-V 系统仿真运行 |
+| **GNU Toolchain** | `gcc-riscv64-linux-gnu` | 内核链接与基础编译 |
+| **Musl Toolchain** | `riscv64-linux-musl-cross` | 用户态程序与 Libc 编译 |
+| **Elfinfo** | `latest` | `trace_exe` 依赖分析工具 |
 
 ---
 
 ## ⚠️ 注意事项
 
-* Docker 容器内已配置 `sudo` 无密码权限
-* 网络端口 `5555` 已开放，用于调试和测试
-* 请确保宿主机有足够磁盘空间 (~5GB)
-* 构建镜像和编译可能需要较多时间，请耐心等待
+1. **Root 权限**：脚本在安装系统包和 musl 工具链时需要 `sudo` 权限。
+2. **网络环境**：脚本需要从 GitHub 和 musl.cc 下载文件，请确保网络连接畅通。
+3. **Rust 版本**：为了保证兼容性，锁定使用 `nightly-2025-05-01`。
 
 ---
 
-## 📬 联系
+## 📬 联系与反馈
 
-如有问题，请在仓库 [Issues](https://github.com/nusakom/Alienos-Docker/issues) 提问。
+如有问题，请提交 [Issue](https://github.com/nusakom/Alienos-Docker/issues) 或联系维护者。
