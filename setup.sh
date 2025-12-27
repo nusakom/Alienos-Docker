@@ -51,9 +51,9 @@ fi
 # Ensure cargo is in path
 export PATH="$HOME/.cargo/bin:$PATH"
 
-echo "Installing Rust nightly-2025-05-01..."
-rustup toolchain install nightly-2025-05-01
-rustup default nightly-2025-05-01
+echo "Installing Rust nightly-2025-05-20..."
+rustup toolchain install nightly-2025-05-20
+rustup default nightly-2025-05-20
 
 rustup component add \
   rust-src \

@@ -29,7 +29,7 @@ cd alien-env
 
 **脚本功能：**
 - ✅ 自动安装系统基础依赖 (`build-essential`, `qemu-system-riscv64`, etc.)
-- ✅ 安装/更新 Rust nightly 工具链 (`nightly-2025-05-01`)
+- ✅ 安装/更新 Rust nightly 工具链 (`nightly-2025-05-20`)
 - ✅ 添加 Rust RISC-V target (`riscv64gc-unknown-none-elf`)
 - ✅ 下载并配置 `musl` RISC-V 交叉编译工具链 (至 `/opt/riscv64-linux-musl-cross`)
 - ✅ 安装 `elfinfo` 调试工具
@@ -157,7 +157,7 @@ make run
 
 | 组件 | 版本/说明 | 用途 |
 |------|-----------|------|
-| **Rust Toolchain** | `nightly-2025-05-01` | AlienOS 内核编译 |
+| **Rust Toolchain** | `nightly-2025-05-20` | AlienOS 内核编译 |
 | **QEMU** | `qemu-system-riscv64` | RISC-V 系统仿真运行 |
 | **GNU Toolchain** | `gcc-riscv64-linux-gnu` | 内核链接与基础编译 |
 | **Musl Toolchain** | `riscv64-linux-musl-cross` | 用户态程序与 Libc 编译 |
@@ -170,7 +170,7 @@ make run
 
 1. **Root 权限**：脚本在安装系统包和 musl 工具链时需要 `sudo` 权限。
 2. **网络环境**：脚本需要从 GitHub 和 musl.cc 下载文件，请确保网络连接畅通。
-3. **Rust 版本**：为了保证兼容性，锁定使用 `nightly-2025-05-01`。
+3. **Rust 版本**：为了保证兼容性，锁定使用 `nightly-2025-05-20`（与 Alien 项目的 rust-toolchain.toml 一致）。
 4. **磁盘空间**：确保至少有 5GB 可用磁盘空间用于工具链和构建缓存。
 5. **依赖管理**：首次构建时会自动安装 `gen_ksym` 等工具，请耐心等待。
 
@@ -244,7 +244,10 @@ ls -la kernel-qemu
 ## � 更新日志
 
 ### 2025-01-27
-- ✅ 修复了 `scheduler` 依赖解析问题
+- ✅ **修复了 Rust 版本不一致问题** ⚠️ 重要
+  - 更新 setup.sh 使用 `nightly-2025-05-20`（与 Alien 项目一致）
+  - 之前版本 `nightly-2025-05-01` 会导致编译错误
+- ✅ **修复了 `scheduler` 依赖解析问题**
   - 添加了 `axsched` 包的正确补丁配置
   - 解决了 `smpscheduler` 无法找到 `scheduler` 包的问题
 - ✅ 修复了 `diskfs/tests` 目录创建冲突
