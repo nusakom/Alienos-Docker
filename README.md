@@ -15,7 +15,7 @@
 ### 1. 获取代码
 
 ```bash
-git clone https://github.com/nusakom/Alienos-Docker.git alien-env
+git clone https://github.com/nusakom/Alienos-Environment.git alien-env
 cd alien-env
 ```
 
@@ -58,6 +58,9 @@ riscv64-linux-musl-gcc --version
 ```
 
 ---
+### 5.下载riscv64-linux-musl
+如果遇到 riscv64-linux-musl 下载不成功可以尝试下面链接
+install riscv64-linux-musl:https://musl.cc/
 
 ## 🛠 工具链清单
 
